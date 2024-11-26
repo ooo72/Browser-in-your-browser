@@ -47,6 +47,12 @@
             overflow-y: auto;
             white-space: pre-wrap; 
         }
+        #error-message {
+            text-align: center;
+            margin-top: 20px;
+            color: red;
+            font-size: 24px;
+         }
     </style>
 </head>
 <body>
@@ -54,6 +60,7 @@
         <input type="text" id="url" placeholder="Type URL here..." />
         <button id="go-button">Go</button>
         <button id="source-button">View Source</button>
+        <h1 id="error-message" style="display: none;">URL Not Found</h1>
     </div>
     <iframe id="browser-view"></iframe>
     <pre id="inspector"></pre>
@@ -64,6 +71,7 @@
         const urlInput = document.getElementById('url');
         const browserView = document.getElementById('browser-view');
         const inspector = document.getElementById('inspector');
+        const errorMessage = document.getElementById('error-message');
 
         // Normalize URL function
         function normalizeUrl(input) {
@@ -99,6 +107,9 @@
                 inspector.textContent = 'Error: Unable to fetch the page. Check the URL or try again.';
             }
         });
+        function showErrorMessage() {
+            errorMessage.style.display = 'block'; 
+        }
     </script>
 </body>
 </html>
