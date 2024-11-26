@@ -83,7 +83,7 @@
         
         inspectButton.addEventListener('click', async () => {
             let url = normalizeUrl(urlInput.value);
-            const proxyUrl = 'http://0.0.0.0:8080'; 
+            const proxyUrl = 'https://thingproxy.freeboard.io/fetch/'; 
 
             try {
                 const response = await fetch(proxyUrl + url);
