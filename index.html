@@ -83,7 +83,7 @@
         
         inspectButton.addEventListener('click', async () => {
             let url = normalizeUrl(urlInput.value);
-            const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; 
+            const proxyUrl = 'http://0.0.0.0:8080'; 
 
             try {
                 const response = await fetch(proxyUrl + url);
