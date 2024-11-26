@@ -54,7 +54,7 @@
         <button id="go-button">Go</button>
         <button id="inspect-button">Inspect Element</button>
     </div>
-    <iframe id="browser-view" src="https://raw.githubusercontent.com/ooo72/Browser-in-your-browser/refs/heads/main/view.php"></iframe>
+    <iframe id="browser-view"></iframe>
     <pre id="inspector"></pre>
 
     <script>
@@ -64,16 +64,16 @@
         const browserView = document.getElementById('browser-view');
         const inspector = document.getElementById('inspector');
 
-       
+        // Normalize URL function
         function normalizeUrl(input) {
-            input = input.trim(); 
+            input = input.trim();
             if (!input.startsWith('http://') && !input.startsWith('https://')) {
                 input = 'https://' + input; 
             }
             return input;
         }
 
-        
+        // Navigate to the entered URL
         goButton.addEventListener('click', () => {
             let url = normalizeUrl(urlInput.value);
             browserView.src = url; 
@@ -82,26 +82,11 @@
 
         
         inspectButton.addEventListener('click', async () => {
-    let url = normalizeUrl(urlInput.value);
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; 
-
-    try {
-        const response = await fetch(proxyUrl + url);
-        if (response.ok) {
-            const html = await response.text();
-            inspector.textContent = html; 
-        } else {
-            inspector.textContent = `Error: Unable to fetch the page (Status: ${response.status})`;
-        }
-    } catch (error) {
-        console.error('Error fetching page:', error);
-        inspector.textContent = 'Error: Unable to fetch the page. Check the URL or try again.';
-    }
-});
+            let url = normalizeUrl(urlInput.value);
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; 
 
             try {
-                
-                const response = await fetch(url);
+                const response = await fetch(proxyUrl + url);
                 if (response.ok) {
                     const html = await response.text();
                     inspector.textContent = html; 
