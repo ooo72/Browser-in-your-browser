@@ -23,7 +23,7 @@
             border-radius: 4px;
             margin-right: 10px;
         }
-        #go-button, #inspect-button {
+        #go-button, #source-button {
             padding: 8px 12px;
             background-color: #007bff;
             color: white;
@@ -53,14 +53,14 @@
     <div id="navbar">
         <input type="text" id="url" placeholder="Type URL here..." />
         <button id="go-button">Go</button>
-        <button id="inspect-button">Inspect Element</button>
+        <button id="source-button">View Source</button>
     </div>
     <iframe id="browser-view"></iframe>
     <pre id="inspector"></pre>
 
     <script>
         const goButton = document.getElementById('go-button');
-        const inspectButton = document.getElementById('inspect-button');
+        const sourceButton = document.getElementById('source-button');
         const urlInput = document.getElementById('url');
         const browserView = document.getElementById('browser-view');
         const inspector = document.getElementById('inspector');
@@ -82,7 +82,7 @@
         });
 
         
-        inspectButton.addEventListener('click', async () => {
+        sourceButton.addEventListener('click', async () => {
             let url = normalizeUrl(urlInput.value);
             const proxyUrl = 'https://api.allorigins.win/get?url='; 
 
