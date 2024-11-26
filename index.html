@@ -82,7 +82,22 @@
 
         
         inspectButton.addEventListener('click', async () => {
-            let url = normalizeUrl(urlInput.value);
+    let url = normalizeUrl(urlInput.value);
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; 
+
+    try {
+        const response = await fetch(proxyUrl + url);
+        if (response.ok) {
+            const html = await response.text();
+            inspector.textContent = html; 
+        } else {
+            inspector.textContent = `Error: Unable to fetch the page (Status: ${response.status})`;
+        }
+    } catch (error) {
+        console.error('Error fetching page:', error);
+        inspector.textContent = 'Error: Unable to fetch the page. Check the URL or try again.';
+    }
+});
 
             try {
                 
