@@ -47,6 +47,12 @@
             overflow-y: auto;
             white-space: pre-wrap; 
         }
+        #error-message {
+            text-align: center;
+            margin-top: 20px;
+            color: red;
+            font-size: 24px;
+        }
     </style>
 </head>
 <body>
@@ -57,6 +63,7 @@
     </div>
     <iframe id="browser-view"></iframe>
     <pre id="inspector"></pre>
+    <h1 id="error-message" style="display: none;">Page is not found, check if there is a typo.</h1>
 
     <script>
         const goButton = document.getElementById('go-button');
@@ -64,6 +71,7 @@
         const urlInput = document.getElementById('url');
         const browserView = document.getElementById('browser-view');
         const inspector = document.getElementById('inspector');
+        const errorMessage = document.getElementById('error-message');
 
         // Normalize URL function
         function normalizeUrl(input) {
@@ -99,6 +107,17 @@
                 inspector.textContent = 'Error: Unable to fetch the page. Check the URL or try again.';
             }
         });
+        function formatHtml(html) {
+            const formatted = html
+                .replace(/</g, '\n<') 
+                .replace(/\n\s*\n/g, '\n') 
+                .trim();
+            return formatted;
+        }
+
+        function showErrorMessage() {
+            errorMessage.style.display = 'block'; 
+        }
     </script>
 </body>
 </html>
