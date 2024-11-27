@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browser</title>
+    <meta property="og:image" content="https://tinyurl.com/3wmexbrb">
+    <title>Chromed</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,7 +24,7 @@
             border-radius: 4px;
             margin-right: 10px;
         }
-        #go-button, #source-button {
+        #go-button, #inspect-button {
             padding: 8px 12px;
             background-color: #007bff;
             color: white;
@@ -45,10 +46,12 @@
             padding: 10px;
             background-color: #f9f9f9;
             overflow-y: auto;
-            white-space: pre-wrap; 
+            white-space: pre-wrap; /* Preserve line breaks */
+            word-wrap: break-word; /* Break long words */
+            color: #333; /* Default text color */
         }
         #inspector.error {
-            color: red;
+            color: red; /* Error text color */
         }
     </style>
 </head>
@@ -56,60 +59,62 @@
     <div id="navbar">
         <input type="text" id="url" placeholder="Type URL here..." />
         <button id="go-button">Go</button>
-        <button id="source-button">View Source</button>
+        <button id="inspect-button">Inspect Element</button>
     </div>
-    <iframe id="browser-view"></iframe>
-    <pre id="inspector"></pre>
+    <iframe id="browser-view" src=""></iframe>
+    <pre id="inspector"></pre> <!-- Preformatted text block -->
+
     <script>
         const goButton = document.getElementById('go-button');
-        const sourceButton = document.getElementById('source-button');
+        const inspectButton = document.getElementById('inspect-button');
         const urlInput = document.getElementById('url');
         const browserView = document.getElementById('browser-view');
         const inspector = document.getElementById('inspector');
 
-        // Normalize URL function
         function normalizeUrl(input) {
             input = input.trim();
             if (!input.startsWith('http://') && !input.startsWith('https://')) {
-                input = 'https://' + input; 
+                input = 'https://' + input;
             }
             return input;
         }
 
-        // Navigate to the entered URL
         goButton.addEventListener('click', () => {
             let url = normalizeUrl(urlInput.value);
-            browserView.src = url; 
-            inspector.textContent = ''; 
+            browserView.src = url;
+            inspector.textContent = ''; // Clear the inspector
+            inspector.classList.remove('error'); // Reset error styling
         });
 
-        
-        sourceButton.addEventListener('click', async () => {
+        inspectButton.addEventListener('click', async () => {
             let url = normalizeUrl(urlInput.value);
-            const proxyUrl = 'https://api.allorigins.win/get?url='; 
+            const proxyUrl = 'https://api.allorigins.win/get?url=';
 
             try {
-                const response = await fetch(proxyUrl + url);
+                const response = await fetch(proxyUrl + encodeURIComponent(url));
                 if (response.ok) {
-                    const html = await response.text();
-                    inspector.textContent = html; 
+                    const data = await response.json();
+                    const formattedHtml = formatHtml(data.contents);
+                    inspector.textContent = formattedHtml;
+                    inspector.classList.remove('error'); // Reset error styling
                 } else {
-                    inspector.textContent = `Error: Unable to fetch the page (Status: ${response.status})`;
+                    showErrorMessage(`Error: Unable to fetch the page (Status: ${response.status})`);
                 }
             } catch (error) {
                 console.error('Error fetching page:', error);
-                inspector.textContent = 'Error: Unable to fetch the page. Check the URL or try again.';
+                showErrorMessage('Error: Unable to fetch the page. Check the URL or try again.');
             }
         });
+
         function formatHtml(html) {
             const formatted = html
-                .replace(/</g, '\n<') 
-                .replace(/\n\s*\n/g, '\n') 
+                .replace(/</g, '\n<') // Add a line break before each tag
+                .replace(/\n\s*\n/g, '\n') // Remove extra line breaks
                 .trim();
             return formatted;
         }
 
-               function showErrorMessage(message) {
+        function showErrorMessage(message) {
             inspector.textContent = message; // Show error message in inspector
             inspector.classList.add('error'); // Apply error styling
         }
