@@ -82,21 +82,36 @@
         goButton.addEventListener('click', () => {
             let url = normalizeUrl(urlInput.value);
             browserView.src = url;
-            inspector.textContent = ''; // Clear the inspector
-            inspector.classList.remove('error'); // Reset error styling
+            inspector.textContent = ''; 
+            inspector.classList.remove('error'); 
         });
 
         sourceButton.addEventListener('click', async () => {
-            let url = normalizeUrl(urlInput.value);
-            const proxyUrl = 'https://api.allorigins.win/get?url=';
+    let url = normalizeUrl(urlInput.value);
+    const proxyUrl = 'https://api.allorigins.win/get?url='; 
 
+    try {
+        const response = await fetch(proxyUrl + encodeURIComponent(url));
+        if (response.ok) {
+            const data = await response.json();
+            const formattedHtml = formatHtml(data.contents);
+            inspector.textContent = formattedHtml;
+            inspector.classList.remove('error'); 
+        } else {
+            showErrorMessage(`Error: Unable to fetch the page (Status: ${response.status})`);
+        }
+    } catch (error) {
+        console.error('Error fetching page:', error);
+        showErrorMessage('Error: Unable to fetch the page. Check the URL or try again.');
+    }
+});
             try {
                 const response = await fetch(proxyUrl + encodeURIComponent(url));
                 if (response.ok) {
                     const data = await response.json();
                     const formattedHtml = formatHtml(data.contents);
                     inspector.textContent = formattedHtml;
-                    inspector.classList.remove('error'); // Reset error styling
+                    inspector.classList.remove('error'); 
                 } else {
                     showErrorMessage(`Error: Unable to fetch the page (Status: ${response.status})`);
                 }
@@ -108,15 +123,15 @@
 
         function formatHtml(html) {
             const formatted = html
-                .replace(/</g, '\n<') // Add a line break before each tag
-                .replace(/\n\s*\n/g, '\n') // Remove extra line breaks
+                .replace(/</g, '\n<') 
+                .replace(/\n\s*\n/g, '\n') 
                 .trim();
             return formatted;
         }
 
         function showErrorMessage(message) {
-            inspector.textContent = message; // Show error message in inspector
-            inspector.classList.add('error'); // Apply error styling
+            inspector.textContent = message; 
+            inspector.classList.add('error'); 
         }
     </script>
 </body>
